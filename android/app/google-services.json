@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "756351548423",
+    "project_id": "measureyourlife-48257",
+    "storage_bucket": "measureyourlife-48257.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756351548423:android:b08aaf5105bd65fe93bea2",
+        "android_client_info": {
+          "package_name": "net.artemkv.measureyourlife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "756351548423-kkkifq5d26hgmkvgrv9jcmecrfbpvq9j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBz-2eTA9Rf3Dc8grc8291s5Ld_F5C9mjk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "756351548423-kkkifq5d26hgmkvgrv9jcmecrfbpvq9j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

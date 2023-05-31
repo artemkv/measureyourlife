@@ -1,0 +1,257 @@
+import 'package:flutter/material.dart';
+import 'package:measureyourlife/theme.dart';
+
+import 'custom_components.dart';
+import 'messages.dart';
+import 'model.dart';
+
+// These should be all stateless! No side effects allowed!
+
+const TEXT_PADDING = 12.0;
+const TEXT_FONT_SIZE = 16.0;
+const THEME_COLOR = brownsOrange;
+
+Widget home(
+    BuildContext context, Model model, void Function(Message) dispatch) {
+  if (model is ApplicationNotInitializedModel) {
+    return applicationNotInitialized(dispatch);
+  }
+  if (model is ApplicationFailedToInitializeModel) {
+    return applicationFailedToInitialize(model, dispatch);
+  }
+
+  if (model is UserNotSignedInModel) {
+    return userNotSignedIn(model, dispatch);
+  }
+  if (model is SignInInProgressModel) {
+    return signInInProgress();
+  }
+  if (model is UserFailedToSignInModel) {
+    return userFailedToSignIn(model, dispatch);
+  }
+  if (model is SignOutInProgressModel) {
+    return signOutInProgress();
+  }
+
+  if (model is DayStatsModel) {
+    return DayStatsView(key: UniqueKey(), model: model, dispatch: dispatch);
+  }
+
+  return unknownModel(model);
+}
+
+Widget unknownModel(Model model) {
+  return Text("Unknown model: ${model.runtimeType}");
+}
+
+Widget applicationNotInitialized(void Function(Message) dispatch) {
+  return Material(
+    type: MaterialType.transparency,
+    child: Container(
+        decoration: const BoxDecoration(color: THEME_COLOR),
+        child: const Expanded(child: Row())),
+  );
+}
+
+Widget applicationFailedToInitialize(
+    ApplicationFailedToInitializeModel model, void Function(Message) dispatch) {
+  return Material(
+      type: MaterialType.transparency,
+      child: Container(
+          decoration: const BoxDecoration(color: THEME_COLOR),
+          child: Column(children: [
+            const Padding(
+                padding: EdgeInsets.only(top: 64, left: 12, right: 12),
+                child: Text("Failed to start the application",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold))),
+            Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text("Failed to initialize: ${model.reason}",
+                    style: const TextStyle(color: Colors.white, fontSize: 16))),
+            Padding(
+                padding: const EdgeInsets.all(12),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10)),
+                  onPressed: () {
+                    dispatch(ReInitializationRequested());
+                  },
+                  child: const Text("Try again",
+                      style: TextStyle(
+                          color: THEME_COLOR,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold)),
+                ))
+          ])));
+}
+
+Widget userNotSignedIn(
+    UserNotSignedInModel model, void Function(Message) dispatch) {
+  return Material(
+    type: MaterialType.transparency,
+    child: Container(
+        decoration: const BoxDecoration(color: THEME_COLOR),
+        child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(children: [
+              const Expanded(child: Row()),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: []))
+                ],
+              ),
+              Expanded(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    Expanded(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                          signInButton(model, dispatch),
+                          // userConsent(model, dispatch) // TODO:
+                        ]))
+                  ])),
+            ]))),
+  );
+}
+
+Widget userFailedToSignIn(
+    UserFailedToSignInModel model, void Function(Message) dispatch) {
+  return Material(
+      type: MaterialType.transparency,
+      child: Container(
+          decoration: const BoxDecoration(color: THEME_COLOR),
+          child: Column(children: [
+            const Padding(
+                padding: EdgeInsets.only(top: 64, left: 12, right: 12),
+                child: Text("Sign in failed or cancelled",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold))),
+            Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text("Failed to sign in: ${model.reason}",
+                    style: const TextStyle(color: Colors.white, fontSize: 16))),
+            Padding(
+                padding: const EdgeInsets.all(12),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10)),
+                  onPressed: () {
+                    dispatch(AppInitializedNotSignedIn());
+                  },
+                  child: const Text("Try again",
+                      style: TextStyle(
+                          color: THEME_COLOR,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold)),
+                ))
+          ])));
+}
+
+Widget signInInProgress() {
+  return Material(
+      type: MaterialType.transparency,
+      child: Container(
+          decoration: const BoxDecoration(color: THEME_COLOR),
+          child: const Column(
+            children: [],
+          )));
+}
+
+Widget signOutInProgress() {
+  return Material(
+      type: MaterialType.transparency,
+      child: Container(
+          decoration: const BoxDecoration(color: THEME_COLOR),
+          child: const Column(
+            children: [],
+          )));
+}
+
+Widget dayStatsPage(
+    DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
+  return Text("Here should be your day stats");
+}
+
+Widget signInButton(
+    UserNotSignedInModel model, void Function(Message) dispatch) {
+  var consentGiven = true;
+  //(model.privacyPolicyAccepted && model.personalDataProcessingAccepted);
+
+  return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+        onPressed: consentGiven
+            ? () {
+                dispatch(SignInRequested());
+              }
+            // ignore: dead_code
+            : null,
+        child: const Text("Sign in",
+            style: TextStyle(
+                color: THEME_COLOR, fontSize: 24, fontWeight: FontWeight.bold)),
+      ));
+}
+
+Widget drawer(BuildContext context, DateTime date, DateTime today,
+    void Function(Message) dispatch) {
+  return Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(
+            color: crayolaBlue,
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Text("Measure Your Life",
+                    style: TextStyle(
+                      fontSize: TEXT_FONT_SIZE,
+                      color: Colors.white,
+                    ))),
+            Padding(
+                padding: EdgeInsets.all(2.0),
+                child: Text("Blah-blah",
+                    style: TextStyle(
+                      fontSize: TEXT_FONT_SIZE * 0.8,
+                      color: Colors.white,
+                    )))
+          ]),
+        ),
+        ListTile(
+          title: const Row(children: [
+            Padding(
+                padding: EdgeInsets.only(left: 4.0, right: 32.0),
+                child: Icon(Icons.logout)),
+            Text('Sign out')
+          ]),
+          onTap: () {
+            dispatch(SignOutRequested());
+          },
+        ),
+      ],
+    ),
+  );
+}
