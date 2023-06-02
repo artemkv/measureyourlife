@@ -49,3 +49,20 @@ class DayStatsLoaded implements Message {
 
   const DayStatsLoaded(this.date, this.today, this.editable);
 }
+
+@immutable
+class DayStatsLoadingFailed implements Message {
+  final DateTime date;
+  final DateTime today;
+  final String reason;
+
+  const DayStatsLoadingFailed(this.date, this.today, this.reason);
+}
+
+@immutable
+class DayStatsReloadRequested implements Message {
+  final DateTime date;
+  final DateTime today;
+
+  const DayStatsReloadRequested(this.date, this.today);
+}

@@ -31,8 +31,8 @@ ModelAndCommand reduce(Model model, Message message) {
     return ModelAndCommand(SignInInProgressModel(), SignIn());
   }
   if (message is UserSignedIn) {
-    return ModelAndCommand.justModel(
-        DayStatsModel(message.today, message.today, false));
+    return ModelAndCommand(DayStatsLoadingModel(message.today, message.today),
+        LoadDayStats(message.today));
   }
   if (message is SignInFailed) {
     return ModelAndCommand.justModel(UserFailedToSignInModel(message.reason));
@@ -42,6 +42,19 @@ ModelAndCommand reduce(Model model, Message message) {
   }
   if (message is UserSignedOut) {
     return ModelAndCommand.justModel(const UserNotSignedInModel(false, false));
+  }
+
+  if (message is DayStatsLoaded) {
+    return ModelAndCommand.justModel(
+        DayStatsModel(message.date, message.today, message.editable));
+  }
+  if (message is DayStatsLoadingFailed) {
+    return ModelAndCommand.justModel(
+        DayStatsFailedToLoadModel(message.date, message.today, message.reason));
+  }
+  if (message is DayStatsReloadRequested) {
+    return ModelAndCommand(DayStatsLoadingModel(message.today, message.today),
+        LoadDayStats(message.date));
   }
 
   return ModelAndCommand.justModel(model);

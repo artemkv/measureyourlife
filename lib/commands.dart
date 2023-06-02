@@ -2,6 +2,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:measureyourlife/dateutil.dart';
 
 import 'messages.dart';
 import 'services/google_sign_in.dart';
@@ -95,7 +96,6 @@ class SignOut implements Command {
   }
 }
 
-// TODO:
 @immutable
 class LoadDayStats implements Command {
   final DateTime date;
@@ -103,5 +103,18 @@ class LoadDayStats implements Command {
   const LoadDayStats(this.date);
 
   @override
-  void execute(void Function(Message) dispatch) {}
+  void execute(void Function(Message) dispatch) {
+    Future<void>.delayed(Duration.zero, () => loadDayStats(dispatch));
+  }
+
+  Future<void> loadDayStats(void Function(Message) dispatch) async {
+    var today = DateTime.now();
+    bool editable = date.isSameDate(today) || date.isBefore(today);
+
+    try {
+      dispatch(DayStatsLoaded(date, today, editable));
+    } catch (err) {
+      dispatch(DayStatsLoadingFailed(date, today, err.toString()));
+    }
+  }
 }

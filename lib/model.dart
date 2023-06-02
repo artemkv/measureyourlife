@@ -52,3 +52,20 @@ class DayStatsModel extends Model {
 
   const DayStatsModel(this.date, this.today, this.editable);
 }
+
+@immutable
+class DayStatsLoadingModel extends Model {
+  final DateTime date;
+  final DateTime today;
+
+  const DayStatsLoadingModel(this.date, this.today);
+}
+
+@immutable
+class DayStatsFailedToLoadModel extends Model {
+  final DateTime date;
+  final DateTime today;
+  final String reason;
+
+  const DayStatsFailedToLoadModel(this.date, this.today, this.reason);
+}

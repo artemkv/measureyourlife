@@ -34,8 +34,14 @@ Widget home(
     return signOutInProgress();
   }
 
+  if (model is DayStatsLoadingModel) {
+    return dayStatsLoading(context, model, dispatch);
+  }
   if (model is DayStatsModel) {
     return DayStatsView(key: UniqueKey(), model: model, dispatch: dispatch);
+  }
+  if (model is DayStatsFailedToLoadModel) {
+    return dayStatsFailedToLoad(context, model, dispatch);
   }
 
   return unknownModel(model);
@@ -252,6 +258,47 @@ Widget drawer(BuildContext context, DateTime date, DateTime today,
   );
 }
 
+Widget dayStatsLoading(BuildContext context, DayStatsLoadingModel model,
+    void Function(Message) dispatch) {
+  return Scaffold(
+      appBar: AppBar(
+        title: const Text('Measure your life'),
+        elevation: 0.0,
+      ),
+      drawer: drawer(context, model.date, model.today, dispatch),
+      body: Center(child: Column(children: [Expanded(child: spinner())])));
+}
+
+Widget dayStatsFailedToLoad(BuildContext context,
+    DayStatsFailedToLoadModel model, void Function(Message) dispatch) {
+  return Scaffold(
+      appBar: AppBar(
+        title: const Text('Measure your life'),
+        elevation: 0.0,
+      ),
+      drawer: drawer(context, model.date, model.today, dispatch),
+      body: Center(
+          child: Column(children: [
+        Padding(
+            padding: const EdgeInsets.all(TEXT_PADDING),
+            child: Text("Failed to contact the server: ${model.reason}",
+                style: const TextStyle(
+                    fontSize: TEXT_FONT_SIZE, color: Colors.red))),
+        Expanded(
+            child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  dispatch(DayStatsReloadRequested(model.date, model.today));
+                },
+                child: Center(
+                    child: Text("Click to reload",
+                        style: GoogleFonts.openSans(
+                            textStyle: const TextStyle(
+                                fontSize: TEXT_FONT_SIZE,
+                                color: Colors.grey))))))
+      ])));
+}
+
 Widget dayStatsPage(
     DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -337,4 +384,11 @@ Widget countAnswer(void Function(int value) onChanged) {
 
 Color getColor(Set<MaterialState> states) {
   return wildStrawberry;
+}
+
+Widget spinner() {
+  return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [CircularProgressIndicator(value: null)]);
 }
