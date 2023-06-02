@@ -41,10 +41,3 @@ class CounterMetricValue implements MetricValue {
 
   const CounterMetricValue(this.id, this.val);
 }
-
-@immutable
-class DayStats {
-  final List<MetricValue> metrics;
-
-  const DayStats(this.metrics);
-}

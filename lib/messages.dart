@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'domain.dart';
+
 @immutable
 abstract class Message {}
 
@@ -46,8 +48,11 @@ class DayStatsLoaded implements Message {
   final DateTime date;
   final DateTime today;
   final bool editable;
+  final Map<String, Metric> metrics;
+  final List<MetricValue> metricValues;
 
-  const DayStatsLoaded(this.date, this.today, this.editable);
+  const DayStatsLoaded(
+      this.date, this.today, this.editable, this.metrics, this.metricValues);
 }
 
 @immutable

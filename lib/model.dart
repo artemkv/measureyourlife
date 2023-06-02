@@ -3,6 +3,8 @@
 
 import 'package:flutter/cupertino.dart';
 
+import 'domain.dart';
+
 @immutable
 abstract class Model {
   const Model();
@@ -49,8 +51,11 @@ class DayStatsModel extends Model {
   final DateTime date;
   final DateTime today;
   final bool editable;
+  final Map<String, Metric> metrics;
+  final List<MetricValue> metricValues;
 
-  const DayStatsModel(this.date, this.today, this.editable);
+  const DayStatsModel(
+      this.date, this.today, this.editable, this.metrics, this.metricValues);
 }
 
 @immutable

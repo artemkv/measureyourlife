@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:measureyourlife/theme.dart';
 
 import 'custom_components.dart';
+import 'domain.dart';
 import 'messages.dart';
 import 'model.dart';
 
@@ -306,19 +307,36 @@ Widget dayStatsPage(
         child: Padding(
             padding: const EdgeInsets.all(TEXT_PADDING),
             child: SingleChildScrollView(
-                child: Column(children: [
-              boolAnswer((x) => {}),
-              boolAnswer((x) => {}),
-              boolAnswer((x) => {}),
-              boolAnswer((x) => {}),
-              boolAnswer((x) => {}),
-              boolAnswer((x) => {}),
-              countAnswer((x) => {})
-            ]))))
+                child: Column(
+                    children: toAnswers(model.metrics, model.metricValues)))))
   ]);
 }
 
-Widget boolAnswer(void Function(bool? value) onChanged) {
+List<Widget> toAnswers(
+    Map<String, Metric> metrics, List<MetricValue> metricValues) {
+  return metricValues.map((metricValue) {
+    if (metricValue is BooleanMetricValue) {
+      var metric = metrics[metricValue.id];
+      if (metric is BooleanMetric) {
+        return boolAnswer(metric.text, metricValue.val, (x) => {});
+      } else {
+        return const Text("unknown metric");
+      }
+    } else if (metricValue is CounterMetricValue) {
+      var metric = metrics[metricValue.id];
+      if (metric is CounterMetric) {
+        return countAnswer(metric.text, metricValue.val, (value) {});
+      } else {
+        return const Text("unknown metric");
+      }
+    } else {
+      return const Text("unknown metric");
+    }
+  }).toList();
+}
+
+Widget boolAnswer(
+    String text, bool value, void Function(bool? value) onChanged) {
   return Padding(
       padding: const EdgeInsets.only(top: TEXT_PADDING * 1.2),
       child: Column(children: [
@@ -326,12 +344,12 @@ Widget boolAnswer(void Function(bool? value) onChanged) {
           Checkbox(
               checkColor: Colors.white,
               fillColor: MaterialStateProperty.resolveWith(getColor),
-              value: true,
+              value: value,
               onChanged: onChanged),
           Flexible(
               child: Wrap(children: [
             Text(
-              "Vitamin C",
+              text,
               style: GoogleFonts.openSans(
                   textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
             )
@@ -340,7 +358,7 @@ Widget boolAnswer(void Function(bool? value) onChanged) {
       ]));
 }
 
-Widget countAnswer(void Function(int value) onChanged) {
+Widget countAnswer(String text, int value, void Function(int value) onChanged) {
   return Padding(
       padding:
           const EdgeInsets.only(top: TEXT_PADDING * 1.2, left: TEXT_PADDING),
@@ -349,7 +367,7 @@ Widget countAnswer(void Function(int value) onChanged) {
           Flexible(
               child: Wrap(children: [
             Text(
-              "Hangs:",
+              "$text: ",
               style: GoogleFonts.openSans(
                   textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
             )
@@ -366,7 +384,7 @@ Widget countAnswer(void Function(int value) onChanged) {
               padding: const EdgeInsets.only(
                   left: TEXT_PADDING / 2, right: TEXT_PADDING / 2),
               child: Text(
-                "5",
+                value.toString(),
                 style: GoogleFonts.openSans(
                     textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
               )),

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:measureyourlife/dateutil.dart';
 
+import 'domain.dart';
 import 'messages.dart';
 import 'services/google_sign_in.dart';
 import 'services/session_api.dart';
@@ -112,7 +113,18 @@ class LoadDayStats implements Command {
     bool editable = date.isSameDate(today) || date.isBefore(today);
 
     try {
-      dispatch(DayStatsLoaded(date, today, editable));
+      var metrics = {
+        "id1": const BooleanMetric("id1", "hello"),
+        "id2": const BooleanMetric("id2", "world"),
+        "id3": const CounterMetric("id3", "count me")
+      };
+      var metricValues = [
+        const BooleanMetricValue("id1", true),
+        const BooleanMetricValue("id2", false),
+        const CounterMetricValue("id3", 4)
+      ];
+
+      dispatch(DayStatsLoaded(date, today, editable, metrics, metricValues));
     } catch (err) {
       dispatch(DayStatsLoadingFailed(date, today, err.toString()));
     }

@@ -45,8 +45,8 @@ ModelAndCommand reduce(Model model, Message message) {
   }
 
   if (message is DayStatsLoaded) {
-    return ModelAndCommand.justModel(
-        DayStatsModel(message.date, message.today, message.editable));
+    return ModelAndCommand.justModel(DayStatsModel(message.date, message.today,
+        message.editable, message.metrics, message.metricValues));
   }
   if (message is DayStatsLoadingFailed) {
     return ModelAndCommand.justModel(
