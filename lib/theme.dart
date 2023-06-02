@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Orioles Orange
 // Browns Orange
 
-const MaterialColor brownsOrange = MaterialColor(
+const MaterialColor wildStrawberry = MaterialColor(
   _wildStrawberryPrimaryValue,
   <int, Color>{
     50: Color.fromRGBO(255, 67, 164, .1),

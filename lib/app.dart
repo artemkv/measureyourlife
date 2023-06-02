@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('en', ''),
       ],
-      theme: ThemeData(primarySwatch: brownsOrange), // TODO:
+      theme: ThemeData(primarySwatch: wildStrawberry), // TODO:
       home: const RootWidget(),
     );
   }

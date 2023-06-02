@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:measureyourlife/theme.dart';
 
 import 'custom_components.dart';
@@ -9,7 +10,7 @@ import 'model.dart';
 
 const TEXT_PADDING = 12.0;
 const TEXT_FONT_SIZE = 16.0;
-const THEME_COLOR = brownsOrange;
+const THEME_COLOR = wildStrawberry;
 
 Widget home(
     BuildContext context, Model model, void Function(Message) dispatch) {
@@ -184,11 +185,6 @@ Widget signOutInProgress() {
           )));
 }
 
-Widget dayStatsPage(
-    DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
-  return Text("Here should be your day stats");
-}
-
 Widget signInButton(
     UserNotSignedInModel model, void Function(Message) dispatch) {
   var consentGiven = true;
@@ -254,4 +250,91 @@ Widget drawer(BuildContext context, DateTime date, DateTime today,
       ],
     ),
   );
+}
+
+Widget dayStatsPage(
+    DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
+  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Expanded(
+        child: Padding(
+            padding: const EdgeInsets.all(TEXT_PADDING),
+            child: SingleChildScrollView(
+                child: Column(children: [
+              boolAnswer((x) => {}),
+              boolAnswer((x) => {}),
+              boolAnswer((x) => {}),
+              boolAnswer((x) => {}),
+              boolAnswer((x) => {}),
+              boolAnswer((x) => {}),
+              countAnswer((x) => {})
+            ]))))
+  ]);
+}
+
+Widget boolAnswer(void Function(bool? value) onChanged) {
+  return Padding(
+      padding: const EdgeInsets.only(top: TEXT_PADDING * 1.2),
+      child: Column(children: [
+        Row(children: [
+          Checkbox(
+              checkColor: Colors.white,
+              fillColor: MaterialStateProperty.resolveWith(getColor),
+              value: true,
+              onChanged: onChanged),
+          Flexible(
+              child: Wrap(children: [
+            Text(
+              "Vitamin C",
+              style: GoogleFonts.openSans(
+                  textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+            )
+          ]))
+        ])
+      ]));
+}
+
+Widget countAnswer(void Function(int value) onChanged) {
+  return Padding(
+      padding:
+          const EdgeInsets.only(top: TEXT_PADDING * 1.2, left: TEXT_PADDING),
+      child: Column(children: [
+        Row(children: [
+          Flexible(
+              child: Wrap(children: [
+            Text(
+              "Hangs:",
+              style: GoogleFonts.openSans(
+                  textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+            )
+          ])),
+          IconButton(
+            icon: Icon(
+              Icons.remove,
+              color: wildStrawberry.shade900,
+            ),
+            iconSize: 32.0,
+            onPressed: () {},
+          ),
+          Padding(
+              padding: const EdgeInsets.only(
+                  left: TEXT_PADDING / 2, right: TEXT_PADDING / 2),
+              child: Text(
+                "5",
+                style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+              )),
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              color: wildStrawberry.shade900,
+            ),
+            iconSize: 32.0,
+            onPressed: () {},
+          ),
+        ])
+      ]));
+}
+
+Color getColor(Set<MaterialState> states) {
+  return wildStrawberry;
 }
