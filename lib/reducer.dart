@@ -65,6 +65,22 @@ ModelAndCommand reduce(Model model, Message message) {
     return ModelAndCommand(DayStatsLoadingModel(message.today, message.today),
         LoadDayStats(message.date));
   }
+  if (message is StatsChangesConfirmed) {
+    return ModelAndCommand(StatsEditorSavingModel(message.date),
+        SaveStats(message.date, message.metricValues));
+  }
+  if (message is StatsSaveRequested) {
+    return ModelAndCommand(StatsEditorSavingModel(message.date),
+        SaveStats(message.date, message.metricValues));
+  }
+  if (message is StatsSaved) {
+    return ModelAndCommand(DayStatsLoadingModel(message.date, message.today),
+        LoadDayStats(message.date));
+  }
+  if (message is SavingStatsFailed) {
+    return ModelAndCommand.justModel(StatsEditorFailedToSaveModel(
+        message.date, message.metricValues, message.reason));
+  }
 
   return ModelAndCommand.justModel(model);
 }

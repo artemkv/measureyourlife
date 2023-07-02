@@ -170,3 +170,31 @@ class LoadDayStats implements Command {
     }
   }
 }
+
+@immutable
+class SaveStats implements Command {
+  final DateTime date;
+  final List<MetricValue> metricValues;
+
+  const SaveStats(this.date, this.metricValues);
+
+  @override
+  void execute(void Function(Message) dispatch) {
+    var today = DateTime.now();
+
+    var dateKey = date.toCompact();
+    var monthKey = getFirstDayOfMonth(date).toCompact();
+
+/*    postWin(dateKey, win, GoogleSignInFacade.getIdToken).then((_) {
+      cache[dateKey] = win;
+      listCache.clear();
+      calendarCache.remove(monthKey);
+      statsCache.clear();
+      insightsCache.clear();
+      savedWinInCurrentSession = true;*/
+    dispatch(StatsSaved(date, today));
+/*    }).catchError((err) {*/
+    //  dispatch(SavingStatsFailed(date, metricValues, err.toString()));
+/*    });*/
+  }
+}

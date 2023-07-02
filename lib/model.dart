@@ -85,3 +85,19 @@ class DayStatsEditorModel extends Model {
   const DayStatsEditorModel(
       this.date, this.today, this.metrics, this.metricValues);
 }
+
+@immutable
+class StatsEditorSavingModel extends Model {
+  final DateTime date;
+
+  const StatsEditorSavingModel(this.date);
+}
+
+@immutable
+class StatsEditorFailedToSaveModel extends Model {
+  final DateTime date;
+  final List<MetricValue> metricValues;
+  final String reason;
+
+  const StatsEditorFailedToSaveModel(this.date, this.metricValues, this.reason);
+}

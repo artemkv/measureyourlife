@@ -90,3 +90,37 @@ class CancelEditingStatsRequested implements Message {
 
   const CancelEditingStatsRequested(this.date, this.today);
 }
+
+@immutable
+class StatsChangesConfirmed implements Message {
+  final DateTime date;
+  final DateTime today;
+  final List<MetricValue> metricValues;
+
+  const StatsChangesConfirmed(this.date, this.today, this.metricValues);
+}
+
+@immutable
+class StatsSaveRequested implements Message {
+  final DateTime date;
+  final List<MetricValue> metricValues;
+
+  const StatsSaveRequested(this.date, this.metricValues);
+}
+
+@immutable
+class StatsSaved implements Message {
+  final DateTime date;
+  final DateTime today;
+
+  const StatsSaved(this.date, this.today);
+}
+
+@immutable
+class SavingStatsFailed implements Message {
+  final DateTime date;
+  final List<MetricValue> metricValues;
+  final String reason;
+
+  const SavingStatsFailed(this.date, this.metricValues, this.reason);
+}

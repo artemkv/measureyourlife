@@ -135,7 +135,10 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
           IconButton(
             icon: const Icon(Icons.check),
             tooltip: 'Save',
-            onPressed: () {},
+            onPressed: () {
+              widget.dispatch(StatsChangesConfirmed(
+                  widget.model.date, widget.model.today, _metricValues));
+            },
           )
         ],
       ),

@@ -48,6 +48,12 @@ Widget home(
   if (model is DayStatsEditorModel) {
     return DayStatsEditor(model: model, dispatch: dispatch);
   }
+  if (model is StatsEditorSavingModel) {
+    return statsEditorSaving(model);
+  }
+  if (model is StatsEditorFailedToSaveModel) {
+    return statsEditorFailedToSave(model, dispatch);
+  }
 
   return unknownModel(model);
 }
@@ -307,21 +313,20 @@ Widget dayStatsFailedToLoad(BuildContext context,
 Widget dayStatsPageReadOnly(
     DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Expanded(
-        child: Padding(
-            padding: const EdgeInsets.all(TEXT_PADDING),
-            child: dayStatsViewer(model.metrics, model.metricValues)))
+    Expanded(child: dayStatsViewer(model.metrics, model.metricValues))
   ]);
 }
 
 Widget dayStatsViewer(
     Map<String, Metric> metrics, List<MetricValue> metricValues) {
   return SingleChildScrollView(
-      child: Column(
-          children: metricValues.map((metricValue) {
-    var metric = metrics[metricValue.id];
-    return toAnswerView(metric, metricValue);
-  }).toList()));
+      child: Padding(
+          padding: const EdgeInsets.all(TEXT_PADDING),
+          child: Column(
+              children: metricValues.map((metricValue) {
+            var metric = metrics[metricValue.id];
+            return toAnswerView(metric, metricValue);
+          }).toList())));
 }
 
 Widget toAnswerView(Metric? metric, MetricValue metricValue) {
@@ -469,4 +474,40 @@ Widget spinner() {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [CircularProgressIndicator(value: null)]);
+}
+
+Widget statsEditorSaving(StatsEditorSavingModel model) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Saving'),
+    ),
+    body: Center(child: spinner()),
+  );
+}
+
+Widget statsEditorFailedToSave(
+    StatsEditorFailedToSaveModel model, void Function(Message) dispatch) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Failed to save'),
+    ),
+    body: Center(
+        child: Column(children: [
+      Padding(
+          padding: const EdgeInsets.all(TEXT_PADDING),
+          child: Text("Failed to contact the server: ${model.reason}",
+              style: const TextStyle(
+                  fontSize: TEXT_FONT_SIZE, color: Colors.red))),
+      Expanded(
+          child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                dispatch(StatsSaveRequested(model.date, model.metricValues));
+              },
+              child: const Center(
+                  child: Text("Click to re-try",
+                      style: TextStyle(
+                          fontSize: TEXT_FONT_SIZE, color: Colors.grey)))))
+    ])),
+  );
 }
