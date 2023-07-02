@@ -45,6 +45,10 @@ Widget home(
     return dayStatsFailedToLoad(context, model, dispatch);
   }
 
+  if (model is DayStatsEditorModel) {
+    return DayStatsEditor(model: model, dispatch: dispatch);
+  }
+
   return unknownModel(model);
 }
 
@@ -300,39 +304,64 @@ Widget dayStatsFailedToLoad(BuildContext context,
       ])));
 }
 
-Widget dayStatsPage(
+Widget dayStatsPageReadOnly(
     DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
   return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
     Expanded(
         child: Padding(
             padding: const EdgeInsets.all(TEXT_PADDING),
-            child: SingleChildScrollView(
-                child: Column(
-                    children: toAnswers(model.metrics, model.metricValues)))))
+            child: dayStatsViewer(model.metrics, model.metricValues)))
   ]);
 }
 
-List<Widget> toAnswers(
+Widget dayStatsViewer(
     Map<String, Metric> metrics, List<MetricValue> metricValues) {
-  return metricValues.map((metricValue) {
-    if (metricValue is BooleanMetricValue) {
-      var metric = metrics[metricValue.id];
-      if (metric is BooleanMetric) {
-        return boolAnswer(metric.text, metricValue.val, (x) => {});
-      } else {
-        return const Text("unknown metric");
-      }
-    } else if (metricValue is CounterMetricValue) {
-      var metric = metrics[metricValue.id];
-      if (metric is CounterMetric) {
-        return countAnswer(metric.text, metricValue.val, (value) {});
-      } else {
-        return const Text("unknown metric");
-      }
+  return SingleChildScrollView(
+      child: Column(
+          children: metricValues.map((metricValue) {
+    var metric = metrics[metricValue.id];
+    return toAnswerView(metric, metricValue);
+  }).toList()));
+}
+
+Widget toAnswerView(Metric? metric, MetricValue metricValue) {
+  if (metricValue is BooleanMetricValue) {
+    if (metric is BooleanMetric) {
+      return boolAnswerView(metric.text, metricValue.val);
     } else {
       return const Text("unknown metric");
     }
-  }).toList();
+  } else if (metricValue is CounterMetricValue) {
+    if (metric is CounterMetric) {
+      return countAnswerView(metric.text, metricValue.val);
+    } else {
+      return const Text("unknown metric");
+    }
+  } else {
+    return const Text("unknown metric");
+  }
+}
+
+Widget boolAnswerView(String text, bool value) {
+  return Padding(
+      padding: const EdgeInsets.only(top: TEXT_PADDING * 1.2),
+      child: Column(children: [
+        Row(children: [
+          Checkbox(
+              checkColor: Colors.white,
+              fillColor: MaterialStateProperty.resolveWith(getColor),
+              value: value,
+              onChanged: (x) {}),
+          Flexible(
+              child: Wrap(children: [
+            Text(
+              text,
+              style: GoogleFonts.openSans(
+                  textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+            )
+          ]))
+        ])
+      ]));
 }
 
 Widget boolAnswer(
@@ -358,6 +387,33 @@ Widget boolAnswer(
       ]));
 }
 
+Widget countAnswerView(String text, int value) {
+  return Padding(
+      padding:
+          const EdgeInsets.only(top: TEXT_PADDING * 1.2, left: TEXT_PADDING),
+      child: Column(children: [
+        Row(children: [
+          Flexible(
+              child: Wrap(children: [
+            Text(
+              "$text: ",
+              style: GoogleFonts.openSans(
+                  textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+            )
+          ])),
+          Padding(
+              padding: const EdgeInsets.only(
+                  left: TEXT_PADDING / 2, right: TEXT_PADDING / 2),
+              child: Text(
+                value.toString(),
+                style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                        fontSize: TEXT_FONT_SIZE, fontWeight: FontWeight.w600)),
+              )),
+        ])
+      ]));
+}
+
 Widget countAnswer(String text, int value, void Function(int value) onChanged) {
   return Padding(
       padding:
@@ -378,7 +434,9 @@ Widget countAnswer(String text, int value, void Function(int value) onChanged) {
               color: wildStrawberry.shade900,
             ),
             iconSize: 32.0,
-            onPressed: () {},
+            onPressed: () {
+              onChanged(value - 1);
+            },
           ),
           Padding(
               padding: const EdgeInsets.only(
@@ -394,7 +452,9 @@ Widget countAnswer(String text, int value, void Function(int value) onChanged) {
               color: wildStrawberry.shade900,
             ),
             iconSize: 32.0,
-            onPressed: () {},
+            onPressed: () {
+              onChanged(value + 1);
+            },
           ),
         ])
       ]));

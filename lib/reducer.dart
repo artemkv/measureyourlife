@@ -57,5 +57,14 @@ ModelAndCommand reduce(Model model, Message message) {
         LoadDayStats(message.date));
   }
 
+  if (message is EditStatsRequested) {
+    return ModelAndCommand.justModel(DayStatsEditorModel(
+        message.date, message.today, message.metrics, message.metricValues));
+  }
+  if (message is CancelEditingStatsRequested) {
+    return ModelAndCommand(DayStatsLoadingModel(message.today, message.today),
+        LoadDayStats(message.date));
+  }
+
   return ModelAndCommand.justModel(model);
 }

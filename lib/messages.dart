@@ -71,3 +71,22 @@ class DayStatsReloadRequested implements Message {
 
   const DayStatsReloadRequested(this.date, this.today);
 }
+
+@immutable
+class EditStatsRequested implements Message {
+  final DateTime date;
+  final DateTime today;
+  final Map<String, Metric> metrics;
+  final List<MetricValue> metricValues;
+
+  const EditStatsRequested(
+      this.date, this.today, this.metrics, this.metricValues);
+}
+
+@immutable
+class CancelEditingStatsRequested implements Message {
+  final DateTime date;
+  final DateTime today;
+
+  const CancelEditingStatsRequested(this.date, this.today);
+}

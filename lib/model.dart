@@ -74,3 +74,14 @@ class DayStatsFailedToLoadModel extends Model {
 
   const DayStatsFailedToLoadModel(this.date, this.today, this.reason);
 }
+
+@immutable
+class DayStatsEditorModel extends Model {
+  final DateTime date;
+  final DateTime today;
+  final Map<String, Metric> metrics;
+  final List<MetricValue> metricValues;
+
+  const DayStatsEditorModel(
+      this.date, this.today, this.metrics, this.metricValues);
+}
