@@ -320,18 +320,19 @@ Widget dayStatsPageReadOnly(
 }
 
 Widget dayStatsViewer(
-    Map<String, Metric> metrics, List<MetricValue> metricValues) {
+    List<Metric> metrics, Map<String, MetricValue> metricValues) {
   return SingleChildScrollView(
       child: Padding(
           padding: const EdgeInsets.all(TEXT_PADDING),
           child: Column(
-              children: metricValues.map((metricValue) {
-            var metric = metrics[metricValue.id];
-            return toAnswerView(metric, metricValue);
+              children: metrics.map((metric) {
+            var metricValue = metricValues[metric.id];
+            return toAnswerView(
+                metric, metricValue ?? getEmptyMetricValue(metric));
           }).toList())));
 }
 
-Widget toAnswerView(Metric? metric, MetricValue metricValue) {
+Widget toAnswerView(Metric metric, MetricValue metricValue) {
   if (metricValue is BooleanMetricValue) {
     if (metric is BooleanMetric) {
       return boolAnswerView(metric.text, metricValue.val);

@@ -48,8 +48,8 @@ class DayStatsLoaded implements Message {
   final DateTime date;
   final DateTime today;
   final bool editable;
-  final Map<String, Metric> metrics;
-  final List<MetricValue> metricValues;
+  final List<Metric> metrics;
+  final Map<String, MetricValue> metricValues;
 
   const DayStatsLoaded(
       this.date, this.today, this.editable, this.metrics, this.metricValues);
@@ -76,8 +76,8 @@ class DayStatsReloadRequested implements Message {
 class EditStatsRequested implements Message {
   final DateTime date;
   final DateTime today;
-  final Map<String, Metric> metrics;
-  final List<MetricValue> metricValues;
+  final List<Metric> metrics;
+  final Map<String, MetricValue> metricValues;
 
   const EditStatsRequested(
       this.date, this.today, this.metrics, this.metricValues);
@@ -95,7 +95,7 @@ class CancelEditingStatsRequested implements Message {
 class StatsChangesConfirmed implements Message {
   final DateTime date;
   final DateTime today;
-  final List<MetricValue> metricValues;
+  final Map<String, MetricValue> metricValues;
 
   const StatsChangesConfirmed(this.date, this.today, this.metricValues);
 }
@@ -103,7 +103,7 @@ class StatsChangesConfirmed implements Message {
 @immutable
 class StatsSaveRequested implements Message {
   final DateTime date;
-  final List<MetricValue> metricValues;
+  final Map<String, MetricValue> metricValues;
 
   const StatsSaveRequested(this.date, this.metricValues);
 }
@@ -119,7 +119,7 @@ class StatsSaved implements Message {
 @immutable
 class SavingStatsFailed implements Message {
   final DateTime date;
-  final List<MetricValue> metricValues;
+  final Map<String, MetricValue> metricValues;
   final String reason;
 
   const SavingStatsFailed(this.date, this.metricValues, this.reason);

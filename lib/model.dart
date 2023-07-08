@@ -51,8 +51,8 @@ class DayStatsModel extends Model {
   final DateTime date;
   final DateTime today;
   final bool editable;
-  final Map<String, Metric> metrics;
-  final List<MetricValue> metricValues;
+  final List<Metric> metrics;
+  final Map<String, MetricValue> metricValues;
 
   const DayStatsModel(
       this.date, this.today, this.editable, this.metrics, this.metricValues);
@@ -79,8 +79,8 @@ class DayStatsFailedToLoadModel extends Model {
 class DayStatsEditorModel extends Model {
   final DateTime date;
   final DateTime today;
-  final Map<String, Metric> metrics;
-  final List<MetricValue> metricValues;
+  final List<Metric> metrics;
+  final Map<String, MetricValue> metricValues;
 
   const DayStatsEditorModel(
       this.date, this.today, this.metrics, this.metricValues);
@@ -96,7 +96,7 @@ class StatsEditorSavingModel extends Model {
 @immutable
 class StatsEditorFailedToSaveModel extends Model {
   final DateTime date;
-  final List<MetricValue> metricValues;
+  final Map<String, MetricValue> metricValues;
   final String reason;
 
   const StatsEditorFailedToSaveModel(this.date, this.metricValues, this.reason);

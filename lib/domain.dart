@@ -56,3 +56,16 @@ class EvaluationMetricValue extends MetricValue {
 
   const EvaluationMetricValue(String id, this.val) : super(id);
 }
+
+MetricValue getEmptyMetricValue(Metric metric) {
+  if (metric is BooleanMetric) {
+    return BooleanMetricValue(metric.id, false);
+  }
+  if (metric is CounterMetric) {
+    return CounterMetricValue(metric.id, 0);
+  }
+  if (metric is EvaluationMetric) {
+    return EvaluationMetricValue(metric.id, -1);
+  }
+  throw "Unhandled metric type";
+}

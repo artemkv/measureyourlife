@@ -79,7 +79,7 @@ class DayStatsEditor extends StatefulWidget {
 }
 
 class _DayStatsEditorState extends State<DayStatsEditor> {
-  List<MetricValue> _metricValues = List.empty();
+  Map<String, MetricValue> _metricValues = {};
 
   @override
   void initState() {
@@ -87,18 +87,13 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
     _metricValues = widget.model.metricValues;
   }
 
-  Widget toAnswer(Metric? metric, MetricValue metricValue) {
+  Widget toAnswer(Metric metric, MetricValue metricValue) {
     if (metricValue is BooleanMetricValue) {
       if (metric is BooleanMetric) {
         return boolAnswer(metric.text, metricValue.val, (value) {
           setState(() {
-            _metricValues = _metricValues.map((m) {
-              if (m.id == metricValue.id) {
-                return BooleanMetricValue(m.id, value ?? false);
-              } else {
-                return m;
-              }
-            }).toList();
+            _metricValues[metric.id] =
+                BooleanMetricValue(metric.id, value ?? false);
           });
         });
       } else {
@@ -107,14 +102,9 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
     } else if (metricValue is CounterMetricValue) {
       if (metric is CounterMetric) {
         return countAnswer(metric.text, metricValue.val, (value) {
+          // TODO: goes to negative
           setState(() {
-            _metricValues = _metricValues.map((m) {
-              if (m.id == metricValue.id) {
-                return CounterMetricValue(m.id, value);
-              } else {
-                return m;
-              }
-            }).toList();
+            _metricValues[metric.id] = CounterMetricValue(metric.id, value);
           });
         });
       } else {
@@ -124,13 +114,7 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
       if (metric is EvaluationMetric) {
         return evalAnswer(metric.text, metricValue.val, (value) {
           setState(() {
-            _metricValues = _metricValues.map((m) {
-              if (m.id == metricValue.id) {
-                return EvaluationMetricValue(m.id, value);
-              } else {
-                return m;
-              }
-            }).toList();
+            _metricValues[metric.id] = EvaluationMetricValue(metric.id, value);
           });
         });
       } else {
@@ -170,9 +154,10 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
                     child: Padding(
                         padding: const EdgeInsets.all(TEXT_PADDING),
                         child: Column(
-                            children: _metricValues.map((metricValue) {
-                          var metric = widget.model.metrics[metricValue.id];
-                          return toAnswer(metric, metricValue);
+                            children: widget.model.metrics.map((metric) {
+                          var metricValue = _metricValues[metric.id];
+                          return toAnswer(metric,
+                              metricValue ?? getEmptyMetricValue(metric));
                         }).toList()))))
           ])),
     );
