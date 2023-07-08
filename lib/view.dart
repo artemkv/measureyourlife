@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:measureyourlife/theme.dart';
@@ -342,6 +344,12 @@ Widget toAnswerView(Metric? metric, MetricValue metricValue) {
     } else {
       return const Text("unknown metric");
     }
+  } else if (metricValue is EvaluationMetricValue) {
+    if (metric is EvaluationMetric) {
+      return evalAnswerView(metric.text, metricValue.val);
+    } else {
+      return const Text("unknown metric");
+    }
   } else {
     return const Text("unknown metric");
   }
@@ -462,6 +470,49 @@ Widget countAnswer(String text, int value, void Function(int value) onChanged) {
             },
           ),
         ])
+      ]));
+}
+
+Widget evalAnswerView(String text, int value) {
+  return Padding(
+      padding:
+          const EdgeInsets.only(top: TEXT_PADDING * 1.2, left: TEXT_PADDING),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "$text: ",
+          style: GoogleFonts.openSans(
+              textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+        ),
+        Padding(
+            padding: const EdgeInsets.only(
+                left: TEXT_PADDING / 2, right: TEXT_PADDING / 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Radio<int>(value: 1, groupValue: value, onChanged: (val) {}),
+                Radio<int>(value: 2, groupValue: value, onChanged: (val) {}),
+                Radio<int>(value: 3, groupValue: value, onChanged: (val) {}),
+                Radio<int>(value: 4, groupValue: value, onChanged: (val) {}),
+                Radio<int>(value: 5, groupValue: value, onChanged: (val) {}),
+              ],
+            ))
+      ]));
+}
+
+Widget evalAnswer(String text, int value, void Function(int value) onChanged) {
+  return Padding(
+      padding:
+          const EdgeInsets.only(top: TEXT_PADDING * 1.2, left: TEXT_PADDING),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          "$text: ",
+          style: GoogleFonts.openSans(
+              textStyle: const TextStyle(fontSize: TEXT_FONT_SIZE)),
+        ),
+        Padding(
+            padding: const EdgeInsets.only(
+                left: TEXT_PADDING / 2, right: TEXT_PADDING / 2),
+            child: Evaluator(value: value, onChanged: onChanged))
       ]));
 }
 

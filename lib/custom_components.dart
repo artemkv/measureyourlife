@@ -120,6 +120,22 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
       } else {
         return const Text("unknown metric");
       }
+    } else if (metricValue is EvaluationMetricValue) {
+      if (metric is EvaluationMetric) {
+        return evalAnswer(metric.text, metricValue.val, (value) {
+          setState(() {
+            _metricValues = _metricValues.map((m) {
+              if (m.id == metricValue.id) {
+                return EvaluationMetricValue(m.id, value);
+              } else {
+                return m;
+              }
+            }).toList();
+          });
+        });
+      } else {
+        return const Text("unknown metric");
+      }
     } else {
       return const Text("unknown metric");
     }
@@ -159,6 +175,90 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
                           return toAnswer(metric, metricValue);
                         }).toList()))))
           ])),
+    );
+  }
+}
+
+class Evaluator extends StatefulWidget {
+  final int value;
+  final void Function(int value) onChanged;
+
+  const Evaluator({super.key, required this.value, required this.onChanged});
+
+  @override
+  State<Evaluator> createState() => _EvaluatorState();
+}
+
+class _EvaluatorState extends State<Evaluator> {
+  int? _val = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _val = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Radio<int>(
+            value: 1,
+            groupValue: _val,
+            onChanged: (val) {
+              setState(() {
+                _val = val;
+              });
+              if (val != null) {
+                widget.onChanged(val);
+              }
+            }),
+        Radio<int>(
+            value: 2,
+            groupValue: _val,
+            onChanged: (val) {
+              setState(() {
+                _val = val;
+              });
+              if (val != null) {
+                widget.onChanged(val);
+              }
+            }),
+        Radio<int>(
+            value: 3,
+            groupValue: _val,
+            onChanged: (val) {
+              setState(() {
+                _val = val;
+              });
+              if (val != null) {
+                widget.onChanged(val);
+              }
+            }),
+        Radio<int>(
+            value: 4,
+            groupValue: _val,
+            onChanged: (val) {
+              setState(() {
+                _val = val;
+              });
+              if (val != null) {
+                widget.onChanged(val);
+              }
+            }),
+        Radio<int>(
+            value: 5,
+            groupValue: _val,
+            onChanged: (val) {
+              setState(() {
+                _val = val;
+              });
+              if (val != null) {
+                widget.onChanged(val);
+              }
+            }),
+      ],
     );
   }
 }
