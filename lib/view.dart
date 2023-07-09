@@ -325,9 +325,13 @@ Widget dayStatsFailedToLoad(BuildContext context,
 
 Widget dayStatsPageReadOnly(
     DayStatsModel model, bool todayPage, void Function(Message) dispatch) {
-  return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Expanded(child: dayStatsViewer(model.metrics, model.metricValues))
-  ]);
+  if (todayPage) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(child: dayStatsViewer(model.metrics, model.metricValues))
+    ]);
+  } else {
+    return Container();
+  }
 }
 
 Widget dayStatsViewer(

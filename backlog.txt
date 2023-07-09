@@ -1,4 +1,2 @@
 - what happens to unknown metric (there is a metric with some id stored, but the definition is gone)
-- when in future, disallow editing
-- reload on pull
-
+- how do I actually construct the list of metric values on the screen? metrics should drive it
