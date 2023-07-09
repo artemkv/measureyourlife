@@ -50,11 +50,11 @@ Widget home(
   if (model is DayStatsEditorModel) {
     return DayStatsEditor(model: model, dispatch: dispatch);
   }
-  if (model is StatsEditorSavingModel) {
-    return statsEditorSaving(model);
+  if (model is DayStatsEditorSavingModel) {
+    return dayStatsEditorSaving(model);
   }
-  if (model is StatsEditorFailedToSaveModel) {
-    return statsEditorFailedToSave(model, dispatch);
+  if (model is DayStatsEditorFailedToSaveModel) {
+    return dayStatsEditorFailedToSave(model, dispatch);
   }
 
   return unknownModel(model);
@@ -528,7 +528,7 @@ Widget spinner() {
       children: [CircularProgressIndicator(value: null)]);
 }
 
-Widget statsEditorSaving(StatsEditorSavingModel model) {
+Widget dayStatsEditorSaving(DayStatsEditorSavingModel model) {
   return Scaffold(
     appBar: AppBar(
       title: const Text('Saving'),
@@ -537,8 +537,8 @@ Widget statsEditorSaving(StatsEditorSavingModel model) {
   );
 }
 
-Widget statsEditorFailedToSave(
-    StatsEditorFailedToSaveModel model, void Function(Message) dispatch) {
+Widget dayStatsEditorFailedToSave(
+    DayStatsEditorFailedToSaveModel model, void Function(Message) dispatch) {
   return Scaffold(
     appBar: AppBar(
       title: const Text('Failed to save'),
@@ -554,7 +554,7 @@ Widget statsEditorFailedToSave(
           child: GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                dispatch(StatsSaveRequested(model.date, model.metricValues));
+                dispatch(DayStatsSaveRequested(model.date, model.metricValues));
               },
               child: const Center(
                   child: Text("Click to re-try",

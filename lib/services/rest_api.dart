@@ -4,9 +4,9 @@ import 'dart:convert';
 // Android emulator:
 // http://10.0.2.2:8700
 // Real device:
-//const BASE_URL = 'http://192.168.0.16:8700';
+const BASE_URL = 'http://192.168.0.12:8700';
 // Cloud service:
-const BASE_URL = 'https://measureyourlife.artemkv.net:8700';
+// const BASE_URL = 'https://measureyourlife.artemkv.net:8700';
 
 class ApiException implements Exception {
   int statusCode;
@@ -97,4 +97,12 @@ Future<dynamic> postJson(String endpoint, Object data,
 
 Future<dynamic> signIn(String idToken) async {
   return await postJson('/signin', {'id_token': idToken});
+}
+
+Future<dynamic> getDayStats(String date, String session) async {
+  return await getJson('/daystats/$date', session);
+}
+
+Future<dynamic> postDayStats(String date, Object data, String session) async {
+  return await postJson('/daystats/$date', data, session: session);
 }

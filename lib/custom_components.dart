@@ -54,7 +54,7 @@ class _DayStatsViewState extends State<DayStatsView> {
         floatingActionButton: (widget.model.editable
             ? FloatingActionButton(
                 onPressed: () {
-                  widget.dispatch(EditStatsRequested(
+                  widget.dispatch(EditDayStatsRequested(
                       widget.model.date,
                       widget.model.today,
                       widget.model.metrics,
@@ -136,7 +136,7 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
             icon: const Icon(Icons.check),
             tooltip: 'Save',
             onPressed: () {
-              widget.dispatch(StatsChangesConfirmed(
+              widget.dispatch(DayStatsChangesConfirmed(
                   widget.model.date, widget.model.today, _metricValues));
             },
           )
@@ -144,7 +144,7 @@ class _DayStatsEditorState extends State<DayStatsEditor> {
       ),
       body: WillPopScope(
           onWillPop: () async {
-            widget.dispatch(CancelEditingStatsRequested(
+            widget.dispatch(CancelEditingDayStatsRequested(
                 widget.model.date, widget.model.today));
             return false;
           },

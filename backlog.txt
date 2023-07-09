@@ -1,0 +1,3 @@
+- what happens to unknown metric (there is a metric with some id stored, but the definition is gone)
+- reload on pull
+- calendar stripe

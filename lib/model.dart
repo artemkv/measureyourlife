@@ -87,17 +87,18 @@ class DayStatsEditorModel extends Model {
 }
 
 @immutable
-class StatsEditorSavingModel extends Model {
+class DayStatsEditorSavingModel extends Model {
   final DateTime date;
 
-  const StatsEditorSavingModel(this.date);
+  const DayStatsEditorSavingModel(this.date);
 }
 
 @immutable
-class StatsEditorFailedToSaveModel extends Model {
+class DayStatsEditorFailedToSaveModel extends Model {
   final DateTime date;
   final Map<String, MetricValue> metricValues;
   final String reason;
 
-  const StatsEditorFailedToSaveModel(this.date, this.metricValues, this.reason);
+  const DayStatsEditorFailedToSaveModel(
+      this.date, this.metricValues, this.reason);
 }

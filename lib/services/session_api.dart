@@ -40,3 +40,12 @@ Future<dynamic> callApi(
     rethrow;
   }
 }
+
+Future<dynamic> getDayStats(String date, Future<String> Function() getIdToken) {
+  return callApi(() => rest.getDayStats(date, session), getIdToken);
+}
+
+Future<dynamic> postDayStats(
+    String date, Object data, Future<String> Function() getIdToken) {
+  return callApi(() => rest.postDayStats(date, data, session), getIdToken);
+}

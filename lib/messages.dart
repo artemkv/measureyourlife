@@ -73,54 +73,54 @@ class DayStatsReloadRequested implements Message {
 }
 
 @immutable
-class EditStatsRequested implements Message {
+class EditDayStatsRequested implements Message {
   final DateTime date;
   final DateTime today;
   final List<Metric> metrics;
   final Map<String, MetricValue> metricValues;
 
-  const EditStatsRequested(
+  const EditDayStatsRequested(
       this.date, this.today, this.metrics, this.metricValues);
 }
 
 @immutable
-class CancelEditingStatsRequested implements Message {
+class CancelEditingDayStatsRequested implements Message {
   final DateTime date;
   final DateTime today;
 
-  const CancelEditingStatsRequested(this.date, this.today);
+  const CancelEditingDayStatsRequested(this.date, this.today);
 }
 
 @immutable
-class StatsChangesConfirmed implements Message {
+class DayStatsChangesConfirmed implements Message {
   final DateTime date;
   final DateTime today;
   final Map<String, MetricValue> metricValues;
 
-  const StatsChangesConfirmed(this.date, this.today, this.metricValues);
+  const DayStatsChangesConfirmed(this.date, this.today, this.metricValues);
 }
 
 @immutable
-class StatsSaveRequested implements Message {
+class DayStatsSaveRequested implements Message {
   final DateTime date;
   final Map<String, MetricValue> metricValues;
 
-  const StatsSaveRequested(this.date, this.metricValues);
+  const DayStatsSaveRequested(this.date, this.metricValues);
 }
 
 @immutable
-class StatsSaved implements Message {
+class DayStatsSaved implements Message {
   final DateTime date;
   final DateTime today;
 
-  const StatsSaved(this.date, this.today);
+  const DayStatsSaved(this.date, this.today);
 }
 
 @immutable
-class SavingStatsFailed implements Message {
+class SavingDayStatsFailed implements Message {
   final DateTime date;
   final Map<String, MetricValue> metricValues;
   final String reason;
 
-  const SavingStatsFailed(this.date, this.metricValues, this.reason);
+  const SavingDayStatsFailed(this.date, this.metricValues, this.reason);
 }

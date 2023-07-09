@@ -57,28 +57,28 @@ ModelAndCommand reduce(Model model, Message message) {
         LoadDayStats(message.date));
   }
 
-  if (message is EditStatsRequested) {
+  if (message is EditDayStatsRequested) {
     return ModelAndCommand.justModel(DayStatsEditorModel(
         message.date, message.today, message.metrics, message.metricValues));
   }
-  if (message is CancelEditingStatsRequested) {
+  if (message is CancelEditingDayStatsRequested) {
     return ModelAndCommand(DayStatsLoadingModel(message.today, message.today),
         LoadDayStats(message.date));
   }
-  if (message is StatsChangesConfirmed) {
-    return ModelAndCommand(StatsEditorSavingModel(message.date),
-        SaveStats(message.date, message.metricValues));
+  if (message is DayStatsChangesConfirmed) {
+    return ModelAndCommand(DayStatsEditorSavingModel(message.date),
+        SaveDayStats(message.date, message.metricValues));
   }
-  if (message is StatsSaveRequested) {
-    return ModelAndCommand(StatsEditorSavingModel(message.date),
-        SaveStats(message.date, message.metricValues));
+  if (message is DayStatsSaveRequested) {
+    return ModelAndCommand(DayStatsEditorSavingModel(message.date),
+        SaveDayStats(message.date, message.metricValues));
   }
-  if (message is StatsSaved) {
+  if (message is DayStatsSaved) {
     return ModelAndCommand(DayStatsLoadingModel(message.date, message.today),
         LoadDayStats(message.date));
   }
-  if (message is SavingStatsFailed) {
-    return ModelAndCommand.justModel(StatsEditorFailedToSaveModel(
+  if (message is SavingDayStatsFailed) {
+    return ModelAndCommand.justModel(DayStatsEditorFailedToSaveModel(
         message.date, message.metricValues, message.reason));
   }
 

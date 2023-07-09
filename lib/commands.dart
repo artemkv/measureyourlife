@@ -113,18 +113,33 @@ class LoadDayStats implements Command {
     bool editable = date.isSameDate(today) || date.isBefore(today);
 
     try {
+      // TODO:
+      /*if (!editable) {
+        dispatch(DailyWinViewLoaded(date, today, priorityList, WinData.empty(),
+            editable, askForReview));
+        return;
+      }*/
+
+      // TODO: metrics are hard-coded by now
       var metrics = [
         const EvaluationMetric("hap", "Happiness"),
         const EvaluationMetric("anx", "Anxiety"),
         const EvaluationMetric("soc", "Social"),
-        const EvaluationMetric("eng", "Energy"),
+        const EvaluationMetric("egy", "Energy"),
         const EvaluationMetric("act", "Activity level"),
         const EvaluationMetric("ach", "Achievement"),
+        const EvaluationMetric("eng", "Engagement"),
         const BooleanMetric("id1", "Abs"),
         const BooleanMetric("id2", "Shoulders"),
         const CounterMetric("id3", "Hangs"),
       ];
-      Map<String, MetricValue> metricValues = {};
+
+      var dateKey = date.toCompact();
+
+      var json = await getDayStats(dateKey, GoogleSignInFacade.getIdToken);
+      var metricTypes = {for (var m in metrics) m.id: m.type};
+      var dayStats = DayStatsData.fromJson(metricTypes, json);
+      var metricValues = {for (var m in dayStats.metricValues) m.id: m};
 
       dispatch(DayStatsLoaded(date, today, editable, metrics, metricValues));
     } catch (err) {
@@ -134,29 +149,24 @@ class LoadDayStats implements Command {
 }
 
 @immutable
-class SaveStats implements Command {
+class SaveDayStats implements Command {
   final DateTime date;
   final Map<String, MetricValue> metricValues;
 
-  const SaveStats(this.date, this.metricValues);
+  const SaveDayStats(this.date, this.metricValues);
 
   @override
   void execute(void Function(Message) dispatch) {
     var today = DateTime.now();
 
     var dateKey = date.toCompact();
-    var monthKey = getFirstDayOfMonth(date).toCompact();
 
-/*    postWin(dateKey, win, GoogleSignInFacade.getIdToken).then((_) {
-      cache[dateKey] = win;
-      listCache.clear();
-      calendarCache.remove(monthKey);
-      statsCache.clear();
-      insightsCache.clear();
-      savedWinInCurrentSession = true;*/
-    dispatch(StatsSaved(date, today));
-/*    }).catchError((err) {*/
-    //  dispatch(SavingStatsFailed(date, metricValues, err.toString()));
-/*    });*/
+    postDayStats(dateKey, DayStatsData(metricValues.values.toList()),
+            GoogleSignInFacade.getIdToken)
+        .then((_) {
+      dispatch(DayStatsSaved(date, today));
+    }).catchError((err) {
+      dispatch(SavingDayStatsFailed(date, metricValues, err.toString()));
+    });
   }
 }
