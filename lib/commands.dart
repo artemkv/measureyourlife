@@ -122,13 +122,14 @@ class LoadDayStats implements Command {
 
       // TODO: metrics are hard-coded by now
       var metrics = [
-        const EvaluationMetric("hap", "Happiness"),
-        const EvaluationMetric("anx", "Anxiety"),
-        const EvaluationMetric("soc", "Social"),
-        const EvaluationMetric("egy", "Energy"),
+        const EvaluationMetric("hap", "Overall happiness"),
+        const EvaluationMetric("egy", "Energy level"),
         const EvaluationMetric("act", "Activity level"),
-        const EvaluationMetric("ach", "Achievement"),
-        const EvaluationMetric("eng", "Engagement"),
+        const EvaluationMetric("anx", "Anxiety"),
+        const EvaluationMetric("soc", "Social interactions"),
+        const EvaluationMetric("frd", "Friendship happiness"),
+        const EvaluationMetric("ach", "Level of achievement"),
+        const EvaluationMetric("eng", "Engagement with projects"),
         const BooleanMetric("id1", "Abs"),
         const BooleanMetric("id2", "Shoulders"),
         const CounterMetric("id3", "Hangs"),

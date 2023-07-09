@@ -1,5 +1,6 @@
-import 'dart:ffi';
+import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:measureyourlife/theme.dart';
@@ -8,6 +9,7 @@ import 'custom_components.dart';
 import 'domain.dart';
 import 'messages.dart';
 import 'model.dart';
+import 'dateutil.dart';
 
 // These should be all stateless! No side effects allowed!
 
@@ -279,7 +281,13 @@ Widget dayStatsLoading(BuildContext context, DayStatsLoadingModel model,
         elevation: 0.0,
       ),
       drawer: drawer(context, model.date, model.today, dispatch),
-      body: Center(child: Column(children: [Expanded(child: spinner())])));
+      body: Center(
+          child: Column(children: [
+        Material(
+            elevation: 4.0,
+            child: calendarStripe(context, model.date, model.today, dispatch)),
+        Expanded(child: spinner())
+      ])));
 }
 
 Widget dayStatsFailedToLoad(BuildContext context,
@@ -292,6 +300,9 @@ Widget dayStatsFailedToLoad(BuildContext context,
       drawer: drawer(context, model.date, model.today, dispatch),
       body: Center(
           child: Column(children: [
+        Material(
+            elevation: 4.0,
+            child: calendarStripe(context, model.date, model.today, dispatch)),
         Padding(
             padding: const EdgeInsets.all(TEXT_PADDING),
             child: Text("Failed to contact the server: ${model.reason}",
@@ -562,4 +573,102 @@ Widget dayStatsEditorFailedToSave(
                           fontSize: TEXT_FONT_SIZE, color: Colors.grey)))))
     ])),
   );
+}
+
+Widget calendarStripe(BuildContext context, DateTime date, DateTime today,
+    void Function(Message) dispatch) {
+  var week = getCurrentWeek(context, date);
+
+  return Container(
+      decoration: const BoxDecoration(color: THEME_COLOR),
+      child: Material(
+          type: MaterialType.transparency,
+          child: Column(children: [
+            Padding(
+                padding: const EdgeInsets.only(bottom: 4.0),
+                child: Row(children: [
+                  IconButton(
+                      icon: const Icon(Icons.arrow_left),
+                      color: Colors.white,
+                      tooltip: 'Prev',
+                      onPressed: () {
+                        // TODO:
+                        // dispatch(MoveToPrevWeek(date, today));
+                      }),
+                  Expanded(
+                      child: Center(
+                          child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {},
+                              child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Text(getDayString(date),
+                                      style: GoogleFonts.openSans(
+                                          textStyle: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0))))))),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_right),
+                    color: Colors.white,
+                    tooltip: 'Next',
+                    onPressed: () {
+                      // TODO:
+                      // dispatch(MoveToNextWeek(date, today));
+                    },
+                  )
+                ])),
+            Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: week
+                    .map((d) => GestureDetector(
+                        onTap: () {
+                          // TODO:
+                          // dispatch(MoveToDay(d, today));
+                        },
+                        child: day(
+                            context,
+                            DateFormat(DateFormat.ABBR_WEEKDAY).format(d),
+                            d.day.toString(),
+                            d.isSameDate(date),
+                            d.isSameDate(today),
+                            d.isSameDate(today) || d.isBefore(today))))
+                    .toList()),
+          ])));
+}
+
+Widget day(BuildContext context, String abbreviation, String numericValue,
+    bool isSelected, bool isToday, bool editable) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double circleRadius = min(screenWidth * 0.105, 40);
+  double fontSize = min(screenWidth * 0.04, 16.0);
+  double biggerFontSize = min(screenWidth * 0.055, 20.0);
+
+  return Padding(
+      padding: const EdgeInsets.only(left: 2.0, right: 2.0, bottom: 8.0),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(abbreviation,
+            style: GoogleFonts.openSans(
+                textStyle: TextStyle(color: Colors.white, fontSize: fontSize))),
+        Stack(alignment: const Alignment(0.8, -0.8), children: [
+          Container(
+              alignment: Alignment.center,
+              width: circleRadius,
+              height: circleRadius,
+              margin: const EdgeInsets.all(4.0),
+              decoration: BoxDecoration(
+                  color: isSelected ? Colors.white : THEME_COLOR,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: editable ? Colors.white : Colors.white30,
+                      width: 2.0)),
+              child: Text(numericValue,
+                  style: GoogleFonts.openSans(
+                      textStyle: TextStyle(
+                          fontWeight:
+                              (isToday ? FontWeight.w900 : FontWeight.normal),
+                          color: (isSelected ? THEME_COLOR : Colors.white),
+                          fontSize: (isToday ? biggerFontSize : fontSize))))),
+        ])
+      ]));
 }

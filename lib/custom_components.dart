@@ -40,6 +40,10 @@ class _DayStatsViewState extends State<DayStatsView> {
         drawer: drawer(
             context, widget.model.date, widget.model.today, widget.dispatch),
         body: Column(children: [
+          Material(
+              elevation: 4.0,
+              child: calendarStripe(context, widget.model.date,
+                  widget.model.today, widget.dispatch)),
           Expanded(
               child: Center(
                   child: PageView.builder(
