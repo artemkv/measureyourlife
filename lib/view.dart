@@ -592,8 +592,7 @@ Widget calendarStripe(BuildContext context, DateTime date, DateTime today,
                       color: Colors.white,
                       tooltip: 'Prev',
                       onPressed: () {
-                        // TODO:
-                        // dispatch(MoveToPrevWeek(date, today));
+                        dispatch(MoveToPrevWeek(date, today));
                       }),
                   Expanded(
                       child: Center(
@@ -612,8 +611,7 @@ Widget calendarStripe(BuildContext context, DateTime date, DateTime today,
                     color: Colors.white,
                     tooltip: 'Next',
                     onPressed: () {
-                      // TODO:
-                      // dispatch(MoveToNextWeek(date, today));
+                      dispatch(MoveToNextWeek(date, today));
                     },
                   )
                 ])),
@@ -623,8 +621,7 @@ Widget calendarStripe(BuildContext context, DateTime date, DateTime today,
                 children: week
                     .map((d) => GestureDetector(
                         onTap: () {
-                          // TODO:
-                          // dispatch(MoveToDay(d, today));
+                          dispatch(MoveToDay(d, today));
                         },
                         child: day(
                             context,

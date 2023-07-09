@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'model.dart';
 import 'messages.dart';
 import 'commands.dart';
+import 'dateutil.dart';
 
 @immutable
 class ModelAndCommand {
@@ -80,6 +81,21 @@ ModelAndCommand reduce(Model model, Message message) {
   if (message is SavingDayStatsFailed) {
     return ModelAndCommand.justModel(DayStatsEditorFailedToSaveModel(
         message.date, message.metricValues, message.reason));
+  }
+
+  if (message is MoveToPrevWeek) {
+    DateTime newDate = message.date.prevWeek();
+    return ModelAndCommand(
+        DayStatsLoadingModel(newDate, message.today), LoadDayStats(newDate));
+  }
+  if (message is MoveToNextWeek) {
+    DateTime newDate = message.date.nextWeek();
+    return ModelAndCommand(
+        DayStatsLoadingModel(newDate, message.today), LoadDayStats(newDate));
+  }
+  if (message is MoveToDay) {
+    return ModelAndCommand(DayStatsLoadingModel(message.date, message.today),
+        LoadDayStats(message.date));
   }
 
   return ModelAndCommand.justModel(model);
