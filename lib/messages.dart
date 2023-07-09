@@ -126,6 +126,22 @@ class SavingDayStatsFailed implements Message {
 }
 
 @immutable
+class MoveToNextDay implements Message {
+  final DateTime date;
+  final DateTime today;
+
+  const MoveToNextDay(this.date, this.today);
+}
+
+@immutable
+class MoveToPrevDay implements Message {
+  final DateTime date;
+  final DateTime today;
+
+  const MoveToPrevDay(this.date, this.today);
+}
+
+@immutable
 class MoveToNextWeek implements Message {
   final DateTime date;
   final DateTime today;

@@ -47,7 +47,15 @@ class _DayStatsViewState extends State<DayStatsView> {
           Expanded(
               child: Center(
                   child: PageView.builder(
-                      onPageChanged: (page) {},
+                      onPageChanged: (page) {
+                        if (page == yesterday) {
+                          widget.dispatch(MoveToPrevDay(
+                              widget.model.date, widget.model.today));
+                        } else if (page == tomorrow) {
+                          widget.dispatch(MoveToNextDay(
+                              widget.model.date, widget.model.today));
+                        }
+                      },
                       scrollDirection: Axis.horizontal,
                       controller: _controller,
                       itemBuilder: (context, index) {

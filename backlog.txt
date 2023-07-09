@@ -1,3 +1,4 @@
 - what happens to unknown metric (there is a metric with some id stored, but the definition is gone)
+- when in future, disallow editing
 - reload on pull
-- calendar stripe
+

@@ -83,6 +83,16 @@ ModelAndCommand reduce(Model model, Message message) {
         message.date, message.metricValues, message.reason));
   }
 
+  if (message is MoveToPrevDay) {
+    DateTime newDate = message.date.prevDay();
+    return ModelAndCommand(
+        DayStatsLoadingModel(newDate, message.today), LoadDayStats(newDate));
+  }
+  if (message is MoveToNextDay) {
+    DateTime newDate = message.date.nextDay();
+    return ModelAndCommand(
+        DayStatsLoadingModel(newDate, message.today), LoadDayStats(newDate));
+  }
   if (message is MoveToPrevWeek) {
     DateTime newDate = message.date.prevWeek();
     return ModelAndCommand(
